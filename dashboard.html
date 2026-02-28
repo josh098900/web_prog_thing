@@ -397,7 +397,9 @@
         <div id="view-past" class="dashboard-view">
             <div class="widget">
                 <h3 class="widget-title">FLIGHT HISTORY</h3>
-                <p style="color: rgba(255,255,255,0.6);">No past flights found in your bespoke history log.</p>
+                <div id="history-container">
+                    <p style="color: rgba(255,255,255,0.6);">Loading flight history...</p>
+                </div>
             </div>
         </div>
 
@@ -416,13 +418,10 @@
                 <h3 class="widget-title">BESPOKE MENU SELECTION</h3>
                 <p style="color: rgba(255,255,255,0.6);">Select your preferred champagne vintage and caviar pairings for
                     your upcoming flight.</p>
-                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
-                    <button
-                        style="background: transparent; border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 10px 20px; border-radius: 20px; cursor: pointer;">Beluga
-                        Caviar</button>
-                    <button
-                        style="background: transparent; border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 10px 20px; border-radius: 20px; cursor: pointer;">Dom
-                        Pérignon 2012</button>
+
+                <div id="catering-menu-container"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem;">
+                    <p style="color: rgba(255,255,255,0.6);">Loading bespoke menu options...</p>
                 </div>
             </div>
         </div>
@@ -494,12 +493,83 @@
                 switchView('view-catering');
             });
 
+            // Backend Data Hydration
+            fetchHistoryData();
+            fetchMenuData();
+
             // Logout/Reset logic
             document.getElementById('btn-logout').addEventListener('click', () => {
                 localStorage.removeItem('jesko_active_booking');
                 window.location.href = '/';
             });
         });
+
+        // Fetch Utilities
+        async function fetchHistoryData() {
+            try {
+                const res = await fetch('http://localhost:3000/api/history');
+                const json = await res.json();
+                const container = document.getElementById('history-container');
+
+                if (json.data && json.data.length > 0) {
+                    let html = `<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left;">
+                                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--gold-accent); font-size: 0.8rem; text-transform: uppercase;">
+                                    <th style="padding: 10px 0;">Date</th>
+                                    <th>Route</th>
+                                    <th>Aircraft</th>
+                                    <th>Status</th>
+                                  </tr>`;
+
+                    json.data.forEach(flight => {
+                        html += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                    <td style="padding: 15px 0; color: rgba(255,255,255,0.8);">${flight.date}</td>
+                                    <td style="font-weight: 500;">${flight.origin} ➝ ${flight.destination}</td>
+                                    <td style="color: rgba(255,255,255,0.6);">${flight.aircraft}</td>
+                                    <td style="color: #4CAF50;">${flight.status}</td>
+                                 </tr>`;
+                    });
+                    html += `</table>`;
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `<p style="color: rgba(255,255,255,0.6);">No past flights found.</p>`;
+                }
+            } catch (e) {
+                console.error('Failed to fetch history', e);
+                document.getElementById('history-container').innerHTML = `<p style="color: red;">Failed to load history.</p>`;
+            }
+        }
+
+        async function fetchMenuData() {
+            try {
+                const res = await fetch('http://localhost:3000/api/menu');
+                const json = await res.json();
+                const container = document.getElementById('catering-menu-container');
+
+                if (json.data && json.data.length > 0) {
+                    let html = '';
+                    json.data.forEach(item => {
+                        html += `
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(204,164,80,0.3); border-radius: 10px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h4 style="margin: 0 0 5px 0; color: var(--gold-accent); font-size: 0.8rem; text-transform: uppercase;">${item.category}</h4>
+                                <h3 style="margin: 0 0 10px 0; font-size: 1.1rem;">${item.item_name}</h3>
+                                <p style="margin: 0 0 15px 0; font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.4;">${item.description}</p>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                                <span style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">${item.price}</span>
+                                <button style="background: transparent; border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 5px 15px; border-radius: 15px; cursor: pointer; font-size: 0.8rem;">Add</button>
+                            </div>
+                        </div>`;
+                    });
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `<p style="color: rgba(255,255,255,0.6);">Menu currently unavailable.</p>`;
+                }
+            } catch (e) {
+                console.error('Failed to fetch menu', e);
+                document.getElementById('catering-menu-container').innerHTML = `<p style="color: red;">Failed to load catering menu.</p>`;
+            }
+        }
     </script>
 
     <!-- Import Globe Initialization -->
