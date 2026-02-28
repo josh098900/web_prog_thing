@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jesko Jets | Dashboard</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-light: #ffffff;
+            --gold-accent: #cca450;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 15, 15, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 4rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .nav-menu li {
+            font-size: 1rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-menu li:hover,
+        .nav-menu li.active {
+            color: white;
+        }
+
+        .nav-menu li.active {
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 4rem 6rem;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeUp 1s forwards ease-out;
+        }
+
+        .greeting {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 400;
+            margin: 0 0 10px 0;
+        }
+
+        .sub-greeting {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+        }
+
+        /* Widgets Grid */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            opacity: 0;
+            animation: fadeUp 1.2s forwards ease-out 0.2s;
+        }
+
+        .widget {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .widget:hover {
+            border-color: rgba(204, 164, 80, 0.3);
+        }
+
+        .widget-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-accent);
+            margin: 0 0 1.5rem 0;
+        }
+
+        /* Next Flight Specfic */
+        .flight-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flight-route {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .city-code {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+        }
+
+        .plane-icon {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .flight-details {
+            display: flex;
+            gap: 3rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Weather Widget */
+        .weather-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .temp {
+            font-size: 3rem;
+            font-weight: 300;
+        }
+
+        .weather-desc {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Mobile Responsiveness for Dashboard --- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1.5rem 1.5rem;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                box-sizing: border-box;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .brand-logo {
+                margin-bottom: 0;
+                font-size: 1.5rem;
+            }
+
+            /* Hide the text list on mobile, or just make it a scrollable row instead */
+            .nav-menu {
+                display: none;
+            }
+
+            .main-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .dashboard-header {
+                margin-bottom: 2rem;
+            }
+
+            .greeting {
+                font-size: 2.2rem;
+            }
+
+            .widgets-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .widget {
+                padding: 1.5rem;
+            }
+
+            .flight-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .flight-details {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding-top: 1.5rem;
+                margin-top: 1.5rem;
+            }
+
+            .weather-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .widget[style*="column"] {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="brand-logo">Jesko<br>Jets</div>
+        <ul class="nav-menu">
+            <li class="active">Upcoming Flights</li>
+            <li>Past Journeys</li>
+            <li>Concierge Services</li>
+            <li>In-Flight Catering</li>
+            <li>Billing & Preferences</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h1 class="greeting">Welcome back, <span id="passenger-greeting">Member</span>.</h1>
+            <p class="sub-greeting">Your personalized aviation dashboard.</p>
+        </div>
+
+        <div class="widgets-grid">
+            <!-- Flight Widget -->
+            <div class="widget">
+                <h3 class="widget-title">UP NEXT</h3>
+                <div class="flight-info">
+                    <div class="flight-route">
+                        <span class="city-code">DXB</span>
+                        <span class="plane-icon">✈</span>
+                        <span class="city-code" style="color: var(--gold-accent);">LHR</span>
+                    </div>
+                </div>
+
+                <div class="flight-details">
+                    <div class="detail-block">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value" style="color: #4CAF50;">Confirmed</span>
+                    </div>
+                    <div class="detail-block">
+                        <span class="detail-label">Tail Number</span>
+                        <span class="detail-value">JJ-808</span>
+                    </div>
+                    <div class="detail-block">
+                        <span class="detail-label">Terminal</span>
+                        <span class="detail-value">VIP Private</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Widget -->
+            <div class="widget">
+                <h3 class="widget-title">DESTINATION: LONDON</h3>
+                <div class="weather-info">
+                    <span class="temp">14°</span>
+                    <div class="detail-block">
+                        <span class="weather-desc">Cloudy</span>
+                        <span class="detail-label" style="text-transform: none; margin-top:5px;">Chauffeur
+                            assigned.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Catering Upsell Widget -->
+            <div class="widget"
+                style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 class="widget-title">IN-FLIGHT DINING</h3>
+                    <p style="margin: 0; color: rgba(255,255,255,0.7);">Your caviar and champagne selection has not been
+                        finalized.</p>
+                </div>
+                <button
+                    style="background: var(--gold-accent); color: black; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 600; cursor: pointer;">Finalize
+                    Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedName = localStorage.getItem('jesko_passenger_name');
+            if (storedName) {
+                // Get the first name or handle differently
+                const firstName = storedName.split(' ')[0];
+                document.getElementById('passenger-greeting').innerText = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "web_prog_thing",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "canvas": "^3.2.1",
+    "gsap": "^3.14.2"
+  }
+}

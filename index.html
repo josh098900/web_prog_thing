@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>High-End Flight Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <!-- The persistent scroll container -->
+  <div class="scroll-container">
+
+    <!-- Fixed container for all visual layers -->
+    <div class="fixed-viewport">
+
+      <!-- Layer 1: Exterior Jet -->
+      <!-- This layer starts scaled down and hidden, then pushes through -->
+      <div class="layer layer-exterior">
+        <!-- Wraps the two states together to scale and pan uniformly -->
+        <div class="jet-container">
+          <img src="/interior.jpg" alt="Interior Cutaway" class="jet-image jet-interior" />
+          <img src="/exterior.png" alt="Private Jet" class="jet-image jet-exterior" />
+        </div>
+
+        <div class="overlay-gradient"></div>
+
+        <div class="amenities-container">
+          <div class="amenity amenity-cockpit right-side">
+            <h3 class="brand">Flight Deck</h3>
+            <p>Next-gen avionics delivering a precision ride.</p>
+          </div>
+          <div class="amenity amenity-lounge right-side">
+            <h3 class="brand">The Lounge</h3>
+            <p>Host meetings or relax with 360-degree views.</p>
+          </div>
+          <div class="amenity amenity-bedroom left-side">
+            <h3 class="brand">Master Suite</h3>
+            <p>A full king-size bed and en-suite facilities.</p>
+          </div>
+        </div>
+
+        <div class="navbar exterior-nav">
+          <div class="nav-links">
+            <a href="#">Our Fleet</a>
+            <a href="#">Advantages</a>
+            <a href="#">Global</a>
+          </div>
+          <div class="brand">Jesko Jets</div>
+          <div class="contact">+971 54 432 5050 &nbsp;&nbsp; info@jesko.com</div>
+        </div>
+
+        <div class="hero-container">
+          <h2 class="title-fly title-part">Fly in</h2>
+          <h2 class="title-luxury title-part">Luxury</h2>
+        </div>
+        <div class="subtext-left">
+          <p><strong>Luxury<br>that moves<br>with you</strong></p>
+        </div>
+      </div>
+
+      <!-- Layer 2: Cloud Layer (Middle layer) -->
+      <div class="layer layer-clouds">
+        <img src="/clouds.png" alt="Clouds" class="cloud-image" />
+        <div class="brand-center">Jesko Jets</div>
+      </div>
+
+      <!-- Layer 3: Interior Mask/Window (Top layer) -->
+      <div class="layer layer-interior">
+        <!-- The window wall container -->
+        <div class="window-wall">
+          <img src="/window-transparent.png" alt="Window Interior" class="window-image-overlay" />
+        </div>
+
+        <div class="interior-text-content">
+          <!-- Text that fades out before zooming -->
+          <h1 class="title text-left title-movement">We are<br>movement</h1>
+          <h1 class="title text-right title-distinction">We are<br>distinction</h1>
+          <div class="subtext-lower">
+            <p><strong>Your<br>freedom to<br>enjoy life</strong></p>
+            <p class="small">Every flight is designed around your comfort,<br>time, and ambitions — so you can focus
+              on<br>what truly matters, while we take care of everything else.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Scroll track for GSAP to map against -->
+    <div class="scroll-track"></div>
+  </div>
+
+  <!-- UI Overlays (Book Button) -->
+  <div class="fixed-ui">
+    <div class="bottom-bar">
+      <button class="book-btn" id="open-booking">Book the Flight <span class="icon">✈</span></button>
+    </div>
+  </div>
+
+  <!-- Booking Modal (Hidden initially) -->
+  <div class="booking-modal-overlay" id="booking-modal">
+    <!-- Blur backdrop -->
+    <div class="booking-backdrop"></div>
+
+    <!-- Modal Content -->
+    <div class="booking-content">
+      <button class="close-booking" id="close-booking">✕</button>
+
+      <!-- Step 1: Destination -->
+      <div class="booking-step active" id="step-1">
+        <h2 class="booking-title">Where to?</h2>
+        <div class="booking-input-group">
+          <input type="text" class="luxury-input" placeholder="e.g. Dubai, London, Paris..." autocomplete="off">
+          <div class="search-line"></div>
+        </div>
+
+        <div class="popular-destinations">
+          <div class="dest-card">
+            <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=600&auto=format&fit=crop"
+              alt="Dubai">
+            <span>Dubai</span>
+          </div>
+          <div class="dest-card">
+            <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=600&auto=format&fit=crop"
+              alt="London">
+            <span>London</span>
+          </div>
+          <div class="dest-card">
+            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=600&auto=format&fit=crop"
+              alt="Paris">
+            <span>Paris</span>
+          </div>
+        </div>
+
+        <button class="next-step-btn" id="btn-next-1">Continue ➝</button>
+      </div>
+
+      <!-- Step 2: Dates -->
+      <div class="booking-step" id="step-2">
+        <h2 class="booking-title">When are we flying?</h2>
+
+        <div class="date-picker-container">
+          <div class="date-input-group">
+            <span class="date-label">Departure</span>
+            <input type="date" class="luxury-date-input" id="departure-date">
+          </div>
+          <div class="date-divider"></div>
+          <div class="date-input-group">
+            <span class="date-label">Return</span>
+            <input type="date" class="luxury-date-input" id="return-date">
+          </div>
+        </div>
+
+        <div class="modal-nav-buttons">
+          <button class="back-step-btn" id="btn-back-2">← Back</button>
+          <button class="next-step-btn" id="btn-next-2">Continue ➝</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Guests -->
+      <div class="booking-step" id="step-3">
+        <h2 class="booking-title">How many guests?</h2>
+
+        <div class="guest-selector-container">
+          <button class="guest-btn">1</button>
+          <button class="guest-btn active">2</button>
+          <button class="guest-btn">3</button>
+          <button class="guest-btn">4</button>
+          <button class="guest-btn">5</button>
+          <button class="guest-btn">6+</button>
+        </div>
+
+        <div class="modal-nav-buttons">
+          <button class="back-step-btn" id="btn-back-3">← Back</button>
+          <button class="next-step-btn" id="btn-next-3">Continue ➝</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Name Details -->
+      <div class="booking-step" id="step-4">
+        <h2 class="booking-title">Who is flying?</h2>
+        <div class="booking-input-group">
+          <input type="text" class="luxury-input" id="passenger-name" placeholder="Enter full name" autocomplete="off">
+          <div class="search-line"></div>
+        </div>
+
+        <div class="modal-nav-buttons">
+          <button class="back-step-btn" id="btn-back-4">← Back</button>
+          <button class="next-step-btn pulse-btn" id="btn-finish">Secure Jet</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Digital Boarding Pass Overlay -->
+  <div class="boarding-pass-overlay" id="boarding-pass-overlay">
+    <div class="pass-container">
+      <div class="pass-header">
+        <h3 class="brand">Jesko Jets</h3>
+        <span class="flight-class">FIRST CLASS PASSENGER</span>
+      </div>
+
+      <div class="pass-body">
+        <div class="pass-row">
+          <div class="pass-block">
+            <span class="label">PASSENGER NAME</span>
+            <strong class="value" id="pass-name-display">JOHN DOE</strong>
+          </div>
+          <div class="pass-block text-right">
+            <span class="label">DATE</span>
+            <strong class="value" id="pass-date-display">TBD</strong>
+          </div>
+        </div>
+
+        <div class="pass-route">
+          <div class="route-city" id="route-origin">DXB</div>
+          <div class="route-plane">✈</div>
+          <div class="route-city highlight" id="route-dest">LHR</div>
+        </div>
+
+        <div class="pass-row">
+          <div class="pass-block">
+            <span class="label">GUESTS</span>
+            <strong class="value" id="pass-guests-display">2</strong>
+          </div>
+          <div class="pass-block text-right">
+            <span class="label">GATE</span>
+            <strong class="value">VIP LOUNGE</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="pass-footer">
+        <button class="next-step-btn" id="btn-enter-dashboard">Enter Dashboard →</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
