@@ -158,12 +158,38 @@ function goToStep(stepIndex) {
   );
 }
 
-document.getElementById('btn-next-1').addEventListener('click', () => goToStep(2));
+document.getElementById('btn-next-1').addEventListener('click', () => {
+  const dest = document.getElementById('destination-input').value.trim();
+  if (!dest) {
+    alert("Please enter a destination to continue.");
+    return;
+  }
+  goToStep(2);
+});
+
 document.getElementById('btn-back-2').addEventListener('click', () => goToStep(1));
-document.getElementById('btn-next-2').addEventListener('click', () => goToStep(3));
+
+document.getElementById('btn-next-2').addEventListener('click', () => {
+  const depDate = document.getElementById('departure-date').value;
+  if (!depDate) {
+    alert("Please select a departure date.");
+    return;
+  }
+  goToStep(3);
+});
+
 document.getElementById('btn-back-3').addEventListener('click', () => goToStep(2));
 document.getElementById('btn-next-3').addEventListener('click', () => goToStep(4));
 document.getElementById('btn-back-4').addEventListener('click', () => goToStep(3));
+
+// Popular Destination Quick-Select
+const popularDestCards = document.querySelectorAll('.popular-dest-card');
+popularDestCards.forEach(card => {
+  card.addEventListener('click', (e) => {
+    const dest = card.getAttribute('data-dest');
+    document.getElementById('destination-input').value = dest;
+  });
+});
 // Guest Selection Logic
 const guestBtns = document.querySelectorAll('.guest-btn');
 guestBtns.forEach(btn => {
@@ -175,7 +201,13 @@ guestBtns.forEach(btn => {
 
 document.getElementById('btn-finish').addEventListener('click', () => {
   // Grab standard info
-  const nameInput = document.getElementById('passenger-name').value || "MEMBER";
+  const nameInput = document.getElementById('passenger-name').value.trim();
+  if (!nameInput) {
+    alert("Please enter a passenger name.");
+    return;
+  }
+
+  const destInput = document.getElementById('destination-input').value.trim();
   const dateInput = document.getElementById('departure-date').value || "TBD";
   let activeGuest = document.querySelector('.guest-btn.active');
   let guests = activeGuest ? activeGuest.innerText : "1";
@@ -184,9 +216,19 @@ document.getElementById('btn-finish').addEventListener('click', () => {
   document.getElementById('pass-name-display').innerText = nameInput.toUpperCase();
   document.getElementById('pass-date-display').innerText = dateInput;
   document.getElementById('pass-guests-display').innerText = guests;
+  document.getElementById('route-dest').innerText = destInput.substring(0, 3).toUpperCase(); // mock city code
 
   // Save for Dashboard
-  localStorage.setItem('jesko_passenger_name', nameInput);
+  const activeBooking = {
+    passengerName: nameInput,
+    destination: destInput,
+    departureDate: dateInput,
+    guests: guests,
+    status: "Confirmed",
+    tailNumber: "JJ-808",
+    terminal: "VIP Private"
+  };
+  localStorage.setItem('jesko_active_booking', JSON.stringify(activeBooking));
 
   // Transition to Boarding Pass Overlay
   const boardingPassOverlay = document.getElementById('boarding-pass-overlay');

@@ -284,6 +284,17 @@
                 align-items: flex-start !important;
                 gap: 1.5rem;
             }
+
+            .dashboard-view {
+                display: none;
+                opacity: 0;
+            }
+
+            .dashboard-view.active {
+                display: block;
+                animation: fadeUp 0.8s forwards ease-out;
+            }
+
         }
     </style>
 </head>
@@ -293,11 +304,11 @@
     <div class="sidebar">
         <div class="brand-logo">Jesko<br>Jets</div>
         <ul class="nav-menu">
-            <li class="active">Upcoming Flights</li>
-            <li>Past Journeys</li>
-            <li>Concierge Services</li>
-            <li>In-Flight Catering</li>
-            <li>Billing & Preferences</li>
+            <li class="active" data-target="view-upcoming">Upcoming Flights</li>
+            <li data-target="view-past">Past Journeys</li>
+            <li data-target="view-concierge">Concierge Services</li>
+            <li data-target="view-catering">In-Flight Catering</li>
+            <li data-target="view-billing">Billing & Preferences</li>
         </ul>
     </div>
 
@@ -307,70 +318,171 @@
             <p class="sub-greeting">Your personalized aviation dashboard.</p>
         </div>
 
-        <div class="widgets-grid">
-            <!-- Flight Widget -->
-            <div class="widget">
-                <h3 class="widget-title">UP NEXT</h3>
-                <div class="flight-info">
-                    <div class="flight-route">
-                        <span class="city-code">DXB</span>
-                        <span class="plane-icon">✈</span>
-                        <span class="city-code" style="color: var(--gold-accent);">LHR</span>
+        <!-- Upcoming Flights View -->
+        <div id="view-upcoming" class="dashboard-view active">
+            <div class="widgets-grid">
+                <!-- Flight Widget -->
+                <div class="widget">
+                    <h3 class="widget-title">UP NEXT</h3>
+                    <div class="flight-info">
+                        <div class="flight-route">
+                            <span class="city-code" id="dash-origin">DXB</span>
+                            <span class="plane-icon">✈</span>
+                            <span class="city-code" id="dash-dest" style="color: var(--gold-accent);">LHR</span>
+                        </div>
+                    </div>
+
+                    <div class="flight-details">
+                        <div class="detail-block">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value" id="dash-status" style="color: #4CAF50;">Confirmed</span>
+                        </div>
+                        <div class="detail-block">
+                            <span class="detail-label">Date</span>
+                            <span class="detail-value" id="dash-date">TBD</span>
+                        </div>
+                        <div class="detail-block">
+                            <span class="detail-label">Terminal</span>
+                            <span class="detail-value" id="dash-terminal">VIP Private</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flight-details">
-                    <div class="detail-block">
-                        <span class="detail-label">Status</span>
-                        <span class="detail-value" style="color: #4CAF50;">Confirmed</span>
+                <!-- Weather Widget -->
+                <div class="widget">
+                    <h3 class="widget-title" id="weather-title">DESTINATION: LONDON</h3>
+                    <div class="weather-info">
+                        <span class="temp">14°</span>
+                        <div class="detail-block">
+                            <span class="weather-desc">Cloudy</span>
+                            <span class="detail-label" style="text-transform: none; margin-top:5px;">Chauffeur
+                                assigned.</span>
+                        </div>
                     </div>
-                    <div class="detail-block">
-                        <span class="detail-label">Tail Number</span>
-                        <span class="detail-value">JJ-808</span>
+                </div>
+
+                <!-- Catering Upsell Widget -->
+                <div class="widget"
+                    style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 class="widget-title">IN-FLIGHT DINING</h3>
+                        <p style="margin: 0; color: rgba(255,255,255,0.7);">Your caviar and champagne selection has not
+                            been
+                            finalized.</p>
                     </div>
-                    <div class="detail-block">
-                        <span class="detail-label">Terminal</span>
-                        <span class="detail-value">VIP Private</span>
-                    </div>
+                    <button id="btn-finalize-menu"
+                        style="background: var(--gold-accent); color: black; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 600; cursor: pointer;">Finalize
+                        Menu</button>
                 </div>
             </div>
+        </div>
 
-            <!-- Weather Widget -->
+        <!-- Past Journeys View -->
+        <div id="view-past" class="dashboard-view">
             <div class="widget">
-                <h3 class="widget-title">DESTINATION: LONDON</h3>
-                <div class="weather-info">
-                    <span class="temp">14°</span>
-                    <div class="detail-block">
-                        <span class="weather-desc">Cloudy</span>
-                        <span class="detail-label" style="text-transform: none; margin-top:5px;">Chauffeur
-                            assigned.</span>
-                    </div>
+                <h3 class="widget-title">FLIGHT HISTORY</h3>
+                <p style="color: rgba(255,255,255,0.6);">No past flights found in your bespoke history log.</p>
+            </div>
+        </div>
+
+        <!-- Concierge Services View -->
+        <div id="view-concierge" class="dashboard-view">
+            <div class="widget">
+                <h3 class="widget-title">GROUND TRANSPORT & HOTELS</h3>
+                <p style="color: rgba(255,255,255,0.6);">A Jesko Jets representative will contact you shortly to arrange
+                    ground transportation for your upcoming flight.</p>
+            </div>
+        </div>
+
+        <!-- In-Flight Catering View -->
+        <div id="view-catering" class="dashboard-view">
+            <div class="widget">
+                <h3 class="widget-title">BESPOKE MENU SELECTION</h3>
+                <p style="color: rgba(255,255,255,0.6);">Select your preferred champagne vintage and caviar pairings for
+                    your upcoming flight.</p>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button
+                        style="background: transparent; border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 10px 20px; border-radius: 20px; cursor: pointer;">Beluga
+                        Caviar</button>
+                    <button
+                        style="background: transparent; border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 10px 20px; border-radius: 20px; cursor: pointer;">Dom
+                        Pérignon 2012</button>
                 </div>
             </div>
+        </div>
 
-            <!-- Catering Upsell Widget -->
-            <div class="widget"
-                style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h3 class="widget-title">IN-FLIGHT DINING</h3>
-                    <p style="margin: 0; color: rgba(255,255,255,0.7);">Your caviar and champagne selection has not been
-                        finalized.</p>
-                </div>
-                <button
-                    style="background: var(--gold-accent); color: black; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 600; cursor: pointer;">Finalize
-                    Menu</button>
+        <!-- Billing & Preferences View -->
+        <div id="view-billing" class="dashboard-view">
+            <div class="widget">
+                <h3 class="widget-title">ACCOUNT PREFERENCES</h3>
+                <p style="color: rgba(255,255,255,0.6);">Manage your saved payment methods and passport details below.
+                </p>
+
+                <button id="btn-logout"
+                    style="margin-top:2rem; background: rgba(255,0,0,0.1); border: 1px solid rgba(255,0,0,0.3); color: #ff6b6b; padding: 10px 20px; border-radius: 20px; cursor: pointer;">Clear
+                    Session & Exit</button>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const storedName = localStorage.getItem('jesko_passenger_name');
-            if (storedName) {
-                // Get the first name or handle differently
-                const firstName = storedName.split(' ')[0];
-                document.getElementById('passenger-greeting').innerText = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+            // Load state from local storage
+            const rawBooking = localStorage.getItem('jesko_active_booking');
+            if (rawBooking) {
+                const booking = JSON.parse(rawBooking);
+
+                // Update header greeting
+                const firstName = booking.passengerName.split(' ')[0];
+                document.getElementById('passenger-greeting').innerText = firstName.charAt(0).toUpperCase() + firstName.toLowerCase().slice(1);
+
+                // Populate Up Next Flight Details
+                document.getElementById('dash-dest').innerText = booking.destination.substring(0, 3).toUpperCase();
+                document.getElementById('dash-date').innerText = booking.departureDate;
+                document.getElementById('dash-status').innerText = booking.status;
+                document.getElementById('weather-title').innerText = `DESTINATION: ${booking.destination.toUpperCase()}`;
             }
+
+            // View Routing System
+            const navItems = document.querySelectorAll('.nav-menu li');
+            const views = document.querySelectorAll('.dashboard-view');
+
+            function switchView(targetId) {
+                // Update nav state
+                navItems.forEach(item => {
+                    if (item.getAttribute('data-target') === targetId) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+
+                // Update view state
+                views.forEach(view => {
+                    if (view.id === targetId) {
+                        view.classList.add('active');
+                    } else {
+                        view.classList.remove('active');
+                    }
+                });
+            }
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    switchView(item.getAttribute('data-target'));
+                });
+            });
+
+            // Cross-linking: Quick link from Upsell widget to Catering view
+            document.getElementById('btn-finalize-menu').addEventListener('click', () => {
+                switchView('view-catering');
+            });
+
+            // Logout/Reset logic
+            document.getElementById('btn-logout').addEventListener('click', () => {
+                localStorage.removeItem('jesko_active_booking');
+                window.location.href = '/';
+            });
         });
     </script>
 </body>
